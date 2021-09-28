@@ -12,10 +12,8 @@ TODO
 # Voir les options de make
 make help
 
-# Voir la version du code (selon bottin.go)
-make version
-
 # Bâtir localement une container image sur docker
+# Le tag sera `localhost/vlbeaudoin/haul:latest`
 make build
 ```
 
