@@ -1,0 +1,7 @@
+# Example haul config - custom port for server
+#
+# cli flag 'port' points to config 'server.port',
+#
+# and flags have precedence over config files (as per viper).
+server:
+  port: 1312
