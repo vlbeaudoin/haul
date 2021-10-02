@@ -20,8 +20,7 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "Start the haul server",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
-		fmt.Println(viper.GetInt("server.port"))
+		runServer()
 	},
 }
 
@@ -39,4 +38,9 @@ func init() {
 	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	serverCmd.Flags().IntP("port", "p", 8080, "The network port to bind the server to")
 	viper.BindPFlag("server.port", serverCmd.Flags().Lookup("port"))
+}
+
+func runServer() {
+	fmt.Println("server called")
+	fmt.Println(viper.GetInt("server.port"))
 }
