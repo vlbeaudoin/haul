@@ -8,4 +8,4 @@ help: ## Show this help
 
 .PHONY: build
 build: ## Build une image selon ./Dockerfile
-	docker build -t localhost/vlbeaudoin/haul:latest .
+	docker build -t vlbeaudoin/haul:latest .
