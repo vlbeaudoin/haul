@@ -9,4 +9,6 @@ require (
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.7.1-0.20210427113832-6241f9ab9942 // indirect
 	golang.org/x/text v0.3.7 // indirect
+	gorm.io/driver/sqlite v1.1.5
+	gorm.io/gorm v1.21.15
 )
