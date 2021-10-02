@@ -1,0 +1,21 @@
+## Server directives ##
+[server]
+
+# Port on which to run haul.
+port = 1312
+
+
+## Database directives ##
+[db]
+
+# The database type.
+#
+# Currently only supports sqlite3 (as 'sqlite').
+type = 'sqlite'
+
+# The path to the sqlite3 database file.
+#
+# Can be anywhere accessible to the user running haul, and
+# can be called anything as long as the extension is
+# supported by viper.
+path = '/srv/haul/haul.db'
