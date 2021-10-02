@@ -56,7 +56,9 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default: `.haul.yaml` in '.' or '/etc/haul')")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile,
+		"config", "c",
+		"", "Custom configuration file (default: \"/etc/haul/haul-config.yaml\")")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -65,11 +67,9 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Search config in current directory with name ".haul" (without extension).
-		viper.AddConfigPath(".")
 		viper.AddConfigPath("/etc/haul")
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".haul")
+		viper.SetConfigName("haul-config")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
