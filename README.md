@@ -1,6 +1,6 @@
 # haul
 
-TODO
+Prototype d'application de gestion de pièces ('assets') et d'assemblages ('assembly').
 
 ## Repo
 
@@ -13,7 +13,7 @@ TODO
 make help
 
 # Bâtir localement une container image sur docker
-# Le tag sera `localhost/vlbeaudoin/haul:latest`
+# Le tag sera `vlbeaudoin/haul:latest`
 make build
 ```
 
