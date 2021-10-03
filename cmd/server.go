@@ -11,6 +11,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
+	"net/http"
+
+	"github.com/labstack/echo/v4"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -51,11 +54,24 @@ func declareFlags() {
 
 	serverCmd.Flags().String("db_path", "haul.db", "The database path (config: \"db.path\")")
 	viper.BindPFlag("db.path", serverCmd.Flags().Lookup("db_path"))
+
+	serverCmd.Flags().StringP("motd", "m", "oh hisse", "Message of the day as exposed by the webserver (config: \"server.motd\")")
+	viper.BindPFlag("server.motd", serverCmd.Flags().Lookup("motd"))
 }
 
 func runServer() {
-	fmt.Println("server called")
-	fmt.Println(viper.GetInt("server.port"))
+	log.Print("[I] Starting webserver")
+
+	port := fmt.Sprintf(":%d", viper.GetInt("server.port"))
+	motd := viper.GetString("server.motd")
+
+	e := echo.New()
+
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, motd)
+	})
+
+	e.Logger.Fatal(e.Start(port))
 }
 
 func connectDB() {
