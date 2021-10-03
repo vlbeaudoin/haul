@@ -10,6 +10,7 @@ WORKDIR /go/src/app
 COPY . .
 
 RUN go get -d -v . && \
-    go install -v .
+    go install -v . && \
+    mkdir /srv/haul /etc/haul
 
 CMD haul -h
