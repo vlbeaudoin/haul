@@ -71,7 +71,9 @@ func runServer() {
 		return c.String(http.StatusOK, motd)
 	})
 
-	e.Logger.Fatal(e.Start(port))
+	if err := e.Start(port); err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
 }
 
 func connectDB() {
