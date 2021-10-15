@@ -35,8 +35,8 @@ var serverCmd = &cobra.Command{
 	Use:   "server",
 	Short: "Start the haul server",
 	Run: func(cmd *cobra.Command, args []string) {
-		connectDB()
-		runServer()
+		db := connectDB()
+		runServer(db)
 	},
 }
 
@@ -59,7 +59,7 @@ func declareFlags() {
 	viper.BindPFlag("server.motd", serverCmd.Flags().Lookup("motd"))
 }
 
-func runServer() {
+func runServer(db *gorm.DB) {
 	log.Print("[I] Starting webserver")
 
 	port := fmt.Sprintf(":%d", viper.GetInt("server.port"))
@@ -76,7 +76,7 @@ func runServer() {
 	}
 }
 
-func connectDB() {
+func connectDB() *gorm.DB {
 	var dialector gorm.Dialector
 
 	// Check db type
@@ -114,4 +114,6 @@ func connectDB() {
 
 	// Ok
 	log.Print("[OK] Database connection successful!")
+
+	return db
 }
