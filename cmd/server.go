@@ -71,6 +71,24 @@ func runServer(db *gorm.DB) {
 		return c.String(http.StatusOK, motd)
 	})
 
+	e.GET("/api/asset/:id", func(c echo.Context) error {
+		id := c.Param("id")
+
+		var asset Asset
+
+		db.First(&asset, "id = ?", id)
+
+		// if asset == nil {
+		//   return c.JSON(http.StatusNotFound, asset)
+		// }
+		return c.JSON(http.StatusOK, asset)
+	})
+
+	e.GET("/api/assembly/:id", func(c echo.Context) error {
+		id := c.Param("id")
+		return c.String(http.StatusOK, id)
+	})
+
 	if err := e.Start(port); err != http.ErrServerClosed {
 		log.Fatal(err)
 	}
