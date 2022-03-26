@@ -10,21 +10,6 @@ import (
 
 var db *gorm.DB
 
-/* Example from github.com/vlbeaudoin/tasklist
-type Task struct {
-	gorm.Model
-	Label string `csv:"label" json:"label"`
-	Steps []Step
-}
-
-type Step struct {
-	gorm.Model
-	Description string `csv:"description" json:"description"`
-	Completed   bool   `csv:"completed" json:"completed"`
-	TaskID      uint   `csv:"taskid" json:"taskid"`
-}
-*/
-
 type Assembly struct {
 	gorm.Model
 	ID         uint64     `json:"id"`
@@ -50,7 +35,6 @@ func OpenDatabase() error {
 
 	var dialector gorm.Dialector
 
-	// TODO implement viper:db.type and viper:db.path in cmd/root.cmd
 	switch t := viper.GetString("db.type"); t {
 	case "sqlite":
 		log.Println("Using driver gorm.io/driver/sqlite")
@@ -82,17 +66,80 @@ func OpenDatabase() error {
 }
 
 func MigrateDatabase() {
-	//db.AutoMigrate(&Task{}, &Step{})
-	db.AutoMigrate(&Assembly{}, &Asset{})
+	err := db.AutoMigrate(&Assembly{}, &Asset{})
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
-/* TODO replace with proper struct content
-func InsertTask(label string) {
-	db.Create(&Task{
-		Label: label,
-	})
+// CRUD
+
+// Create
+func InsertAsset(asset Asset) {
+	db.Create(&asset)
 }
 
+func InsertAssembly(assembly Assembly) {
+	db.Create(&assembly)
+}
+
+/* REFERENCE
+func InsertTasks(tasks []*Task) error {
+	if len(tasks) == 0 {
+		return errors.New("Cannot insert empty batch of tasks.")
+	}
+
+	for _, task := range tasks {
+		task.ID = 0
+	}
+
+	db.CreateInBatches(&tasks, 500)
+
+	return nil
+}
+*/
+
+// TODO func InsertAssets
+
+// TODO func InsertAssemblies
+
+// Read
+
+/* REFERENCE
+func FindTaskByID(taskID uint64) (task Task, err error) {
+	result := db.First(&task, taskID)
+	return task, result.Error
+}
+
+func FindStepsByTaskID(taskID uint64) (steps []Step, err error) {
+	result := db.Where("task_id = ?", taskID).Find(&steps)
+	return steps, result.Error
+}
+*/
+
+// TODO func FindAssetByID
+
+// TODO func FindAssemblyByID
+
+/* REFERENCE
+func ListTasks() ([]Task, error) {
+	var tasks []Task
+
+	result := db.Model(&Task{}).Find(&tasks)
+
+	return tasks, result.Error
+}
+*/
+
+// TODO func ListAssets
+
+// TODO func ListAssemblies
+
+// Update
+
+// Delete
+
+/* REFERENCE for TODO InsertAssemblyWithAssetsAndAssemblies (name pending)
 func InsertTaskWithSteps(label string, steps []string) {
 	if len(steps) > 0 {
 		// Populate steps
@@ -110,37 +157,5 @@ func InsertTaskWithSteps(label string, steps []string) {
 	} else {
 		InsertTask(label)
 	}
-}
-
-func ListTasks() ([]Task, error) {
-	var tasks []Task
-
-	result := db.Model(&Task{}).Find(&tasks)
-
-	return tasks, result.Error
-}
-
-func InsertTasks(tasks []*Task) error {
-	if len(tasks) == 0 {
-		return errors.New("Cannot insert empty batch of tasks.")
-	}
-
-	for _, task := range tasks {
-		task.ID = 0
-	}
-
-	db.CreateInBatches(&tasks, 500)
-
-	return nil
-}
-
-func FindTaskByID(taskID uint64) (task Task, err error) {
-	result := db.First(&task, taskID)
-	return task, result.Error
-}
-
-func FindStepsByTaskID(taskID uint64) (steps []Step, err error) {
-	result := db.Where("task_id = ?", taskID).Find(&steps)
-	return steps, result.Error
 }
 */
