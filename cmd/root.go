@@ -26,16 +26,35 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
 
+func declareFlagsForRoot() {
+	// db.path
+	rootCmd.PersistentFlags().String(
+		"db-path", "",
+		"Database path (config: 'db.path')")
+	viper.BindPFlag(
+		"db.path",
+		rootCmd.PersistentFlags().Lookup("db-path"))
+	rootCmd.MarkPersistentFlagRequired("db.path")
+
+	// db.type
+	rootCmd.PersistentFlags().String(
+		"db-type", "",
+		"Database type (config: 'db.type')")
+	viper.BindPFlag(
+		"db.type",
+		rootCmd.PersistentFlags().Lookup("db-type"))
+	rootCmd.MarkPersistentFlagRequired("db.type")
+}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "haul",
-	Short: "A tool to track lab hardware during its extended lifecycle",
+	Short: "A tool to track computer hardware during its extended lifecycle",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -49,7 +68,9 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile,
 		"config", "c",
-		"", "Custom configuration file (default: \"/etc/haul/haul-config.yaml\")")
+		"", "Custom configuration file (default: '$HOME/.haul.yaml')")
+
+	declareFlagsForRoot()
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -58,9 +79,14 @@ func initConfig() {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		viper.AddConfigPath("/etc/haul")
+		// Find home directory.
+		home, err := os.UserHomeDir()
+		cobra.CheckErr(err)
+
+		// Search config in home directory with name ".tasklist" (without extension).
+		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName("haul-config")
+		viper.SetConfigName(".haul")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
